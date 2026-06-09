@@ -1,0 +1,37 @@
+--! file: .gitignore
+-- Git 忽略规则
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# LÖVE 构建产物
+*.love
+game-*/
+*.zip
+*.AppImage
+*.exe
+*.apk
+
+# 编辑器/IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.settings/
+
+# Lua/LuaJIT
+*.luac
+luac.out
+
+# 日志
+*.log
+
+# 构建目录
+build/
+dist/
+
+# 本地配置覆盖
+conf.local.lua
