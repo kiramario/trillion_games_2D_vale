@@ -5,6 +5,7 @@ local logger = require("core.logger")
 local resource = require("core.resource")
 local input = require("core.input")
 local event = require("core.event")
+local scene_manager = require("core.scene_manager")
 local Camera = require("engine.camera")
 local particles = require("engine.particles")
 local audio = require("engine.audio")
@@ -28,6 +29,9 @@ end
 function BoardScene:load(params)
     logger.info("board_scene", "V3 Board scene loading...")
 
+    self.params = params or {}
+    self.w, self.h = love.graphics.getDimensions()
+
     -- 字体
     self.font_piece = resource.getFont("NotoSansCJK-Bold.ttc", 32)
     self.font_body  = resource.getFont("NotoSansCJK-Regular.ttc", 18)
@@ -35,13 +39,16 @@ function BoardScene:load(params)
     self.font_river = resource.getFont("NotoSansCJK-Regular.ttc", 26)
     self.font_big   = resource.getFont("NotoSansCJK-Bold.ttc", 60)
     self.font_ui    = resource.getFont("NotoSansCJK-Regular.ttc", 15)
+    self.font_btn   = resource.getFont("NotoSansCJK-Regular.ttc", 16)
 
-    self.w, self.h = love.graphics.getDimensions()
-
-    -- 相机（必须在 _reset 之前，因为 _reset 会调用 _applyZoom）
+    -- 相机
     self.camera = Camera.new()
-
     self:_reset()
+
+    -- 接收参数
+    if params and params.ai_mode ~= nil then
+        self.ai_mode = params.ai_mode
+    end
 
     -- 音频
     audio.init()
@@ -55,7 +62,9 @@ function BoardScene:load(params)
         if k == "r" then self:_reset()
         elseif k == "u" then self:_undo()
         elseif k == "a" then self.ai_mode = not self.ai_mode
-            self.status_text = self.ai_mode and "AI 对战模式 (执红)" or "双人对战模式"
+            self.status_text = self.ai_mode and "AI 对战模式（执红）" or "双人对战模式"
+        elseif k == "escape" then
+            scene_manager.switch("menu", nil, {fade = true})
         end
     end)
 

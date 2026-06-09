@@ -50,12 +50,14 @@ function M.init(opts)
     local boot_scene = require("game.scenes.boot_scene")
     local demo_scene = require("game.scenes.demo_scene")
     local board_scene = require("game.scenes.board_scene")
+    local menu_scene = require("game.scenes.menu_scene")
     scene_manager.register("boot", boot_scene)
     scene_manager.register("demo", demo_scene)
     scene_manager.register("board", board_scene)
+    scene_manager.register("menu", menu_scene)
 
-    -- V1+ 默认启动后直接进入 board（象棋棋盘）场景
-    scene_manager.switch("boot", { next = "board", next_delay = 1.0 }, { fade = false })
+    -- V4+ 启动到菜单场景
+    scene_manager.switch("boot", { next = "menu", next_delay = 1.0 }, { fade = false })
 
     -- 绑定全局输入快捷键
     input.bindAction("screenshot", {"f12"})
