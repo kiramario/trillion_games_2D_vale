@@ -183,15 +183,11 @@ function M.draw()
         end
 
         love.graphics.push("all")
-        if use_camera then
-            love.graphics.translate(shake_x - camera.x * camera.scale, shake_y - camera.y * camera.scale)
-            love.graphics.scale(camera.scale, camera.scale)
-        end
-
+        -- [V1+] 注：world 层的相机变换由场景在 custom 绘制里自行处理，renderer 不做全局 transform
+        -- （保持正交，让场景完全控制 world 层的相机）
         for _, cmd in ipairs(cmds) do
             M._executeCmd(cmd)
         end
-
         love.graphics.pop()
 
         ::continue::

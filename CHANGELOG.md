@@ -1,5 +1,33 @@
 # CHANGELOG
 
+## v1.0.0 — "棋盘初现" (2026-06-09)
+
+### Added
+- V1 棋盘场景：渲染完整中国象棋棋盘
+- engine/camera 相机模块：居中、缩放、屏幕震动（后续 V3+ 用）
+- game/constants.lua：棋盘尺寸、颜色、棋子字符、初始布局
+- game/entities/piece.lua, game/entities/board.lua：棋子和棋盘数据
+- game/renderers/board_renderer.lua：棋盘渲染（斜视角Y压缩、木纹、厚度、九宫斜线、楚河汉界、炮位L标）
+- game/renderers/piece_renderer.lua：棋子渲染（阴影/底座/主体/高光/内外圈/汉字）
+- 中文字体：Noto Sans CJK SC Regular + Bold（assets/fonts/）
+
+### Changed
+- engine.lua: 启动后默认进入 board 场景；resize 事件通知场景
+- renderer.lua: world 层不再自动做 camera 变换（由场景自行控制）
+
+### Fixed
+- 修复 renderer custom 中嵌套提交 draw command 导致 crash 的问题
+- 修复 Lua 多变量声明语法错误 (`local a=1,b=2` 非法)
+- 修复 love.graphics push/pop 变换栈溢出导致 segfault 的问题
+  （LÖVE2D 图形栈深度 32，循环中不能每个元素都 push/pop）
+
+### How to run
+```bash
+love .
+```
+
+---
+
 ## v0.0.0 — "Hello Engine" (2026-06-09)
 
 ### Added

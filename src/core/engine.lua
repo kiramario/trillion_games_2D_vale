@@ -46,14 +46,16 @@ function M.init(opts)
     -- 初始化渲染器
     renderer.init()
 
-    -- 注册所有场景（V0 只有两个测试场景）
+    -- 注册所有场景
     local boot_scene = require("game.scenes.boot_scene")
     local demo_scene = require("game.scenes.demo_scene")
+    local board_scene = require("game.scenes.board_scene")
     scene_manager.register("boot", boot_scene)
     scene_manager.register("demo", demo_scene)
+    scene_manager.register("board", board_scene)
 
-    -- 启动 boot 场景（不做 fade，直接进入）
-    scene_manager.switch("boot", { next = "demo", next_delay = 1.0 }, { fade = false })
+    -- V1+ 默认启动后直接进入 board（象棋棋盘）场景
+    scene_manager.switch("boot", { next = "board", next_delay = 1.0 }, { fade = false })
 
     -- 绑定全局输入快捷键
     input.bindAction("screenshot", {"f12"})
@@ -132,6 +134,11 @@ end
 function M.resize(w, h)
     logger.info("engine", "Window resized to %dx%d", w, h)
     event.emit("window:resized", { width = w, height = h })
+    local sm = scene_manager
+    local cur = sm.current and sm.current()  -- current 是函数
+    if cur and cur.resize then
+        cur:resize(w, h)
+    end
 end
 
 --! 关闭引擎
