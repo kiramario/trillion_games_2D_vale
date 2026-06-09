@@ -62,6 +62,14 @@ function M.init(opts)
     -- 绑定全局输入快捷键
     input.bindAction("screenshot", {"f12"})
     input.bindAction("toggle_fullscreen", {"f11"})
+    input.bindAction("quit", {"lctrl", "q", "rctrl", "q"})  -- Ctrl+Q 退出，ESC 留给场景处理
+
+    -- V5: Steamworks 钩子（如果 luasteam 可用自动启用，否则静默）
+    local steam = require("core.steam")
+    steam.init()
+
+    -- [LOVE] 绑定事件：engine:shutdown 在退出时调用
+    event.on("engine:quit_requested", function() M.shutdown() end)
 
     start_time = love.timer.getTime()
     initialized = true

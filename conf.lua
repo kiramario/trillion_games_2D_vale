@@ -13,7 +13,7 @@ function love.conf(t)
 
     -- 窗口配置
     t.window.title      = "Trillion Games 2D - Vale"
-    t.window.icon       = nil            -- 窗口图标路径，V5 再放真实图标
+    t.window.icon       = "assets/images/icon.png"  -- [V5] 窗口图标
     t.window.width      = 1280
     t.window.height     = 720
     t.window.minwidth   = 800

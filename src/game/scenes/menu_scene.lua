@@ -80,6 +80,8 @@ function MenuScene:load(params)
     event.on("input:keypressed", function(d)
         if d.key == "return" or d.key == "space" then
             scene_manager.switch("board", {ai_mode = true, new_game = true})
+        elseif d.key == "escape" then
+            love.event.quit()
         end
     end)
 
