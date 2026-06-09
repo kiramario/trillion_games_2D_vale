@@ -1,39 +1,38 @@
-# 部署、执行说明与注意事项
+# SETUP —— 部署、执行、注意事项
 
-> 适用版本：**v0.0.0 "Hello Engine"**
-> 本地仓库路径：`/home/love2DGame_vale`
-> 远程仓库：`https://github.com/kiramario/trillion_games_2D_vale`
+项目：Trillion Games 2D — Vale（中国象棋 / Chinese Chess）
+版本：v5.0.0（V0→V5 全部完成）
+LÖVE2D 目标版本：11.3 / 11.5
+远程仓库：git@github.com:kiramario/trillion_games_2D_vale.git
 
 ---
 
 ## 一、环境要求
 
-| 项目 | 要求 | 备注 |
-|------|------|------|
-| 操作系统 | Linux / Windows / macOS | 跨平台，LÖVE2D 官方支持 |
-| LÖVE2D | **11.3** 或更高（11.x 系列） | 本项目基于 11.3 开发；12.x 目前是预览版，不建议 |
-| LuaJIT | 2.1.x（LÖVE2D 内置，无需单独装） | 不要用 PUC-Lua 5.1/5.3/5.4 代替 |
-| Git | 任意版本 | 仅用于版本管理，不是运行时依赖 |
-| GPU | 支持 OpenGL 2.1+ / OpenGL ES 2.0+ | 现代电脑和手机都满足，象棋游戏几乎不吃显卡 |
-| 内存 | ≥ 100MB | V0 实际占用 < 30MB |
-| 磁盘 | < 5MB（V0，V5 含资源后预估 < 200MB）| |
+### 运行环境（只玩）
+- 操作系统：Windows 10+ / macOS 10.13+ / Ubuntu 18.04+ / Steam Deck（任何能跑 LÖVE2D 的系统）
+- 内存：256 MB RAM 以上（本游戏实际占用 < 80 MB）
+- 硬盘：解压后 ~55 MB（含中文字体 38MB）
+- GPU：任何集成显卡都可以（纯 2D，无 shader 依赖）
+
+### 开发环境（改代码）
+- LÖVE2D 11.3 或 11.5（API 完全兼容）
+- Git
+- 文本编辑器（VS Code 推荐装 Lua/LÖVE2D 插件）
+- Python / make（可选，打包脚本用）
 
 ---
 
-## 二、本地开发环境搭建（Linux，已完成验证）
+## 二、本地部署（开发者模式）
 
 ### 2.1 安装 LÖVE2D
 
-**Ubuntu / Debian（已安装环境，参考）：**
+**Ubuntu/Debian：**
 ```bash
 sudo add-apt-repository ppa:bartbes/love-stable
 sudo apt update
 sudo apt install love
-```
-
-**Arch Linux：**
-```bash
-sudo pacman -S love
+love --version    # 应输出 11.x
 ```
 
 **macOS：**
@@ -42,266 +41,333 @@ brew install --cask love
 ```
 
 **Windows：**
-1. 去官网 https://love2d.org/ 下载 64-bit Installer
-2. 安装后把 `C:\Program Files\LOVE\` 加到 PATH
-3. 命令行执行 `love --version` 验证
+去 https://love2d.org/ 下载 64-bit installer，安装后 love.exe 会自动关联 .love 文件。
 
-**验证安装：**
+**Linux 上跑 AppImage：**
 ```bash
-love --version
-# 预期输出：LOVE 11.3 (Mysterious Mysteries) 或更高 11.x 版本
+wget https://github.com/love2d/love/releases/download/11.5/love-11.5-x86_64.AppImage
+chmod +x love-11.5-x86_64.AppImage
+sudo mv love-11.5-x86_64.AppImage /usr/local/bin/love
 ```
 
-### 2.2 获取代码
-
-**方式 A：克隆远程仓库（推荐）：**
+### 2.2 拉取代码
 ```bash
-git clone https://github.com/kiramario/trillion_games_2D_vale.git
-cd trillion_games_2D_vale
+cd ~
+git clone git@github.com:kiramario/trillion_games_2D_vale.git love2DGame_vale
+cd love2DGame_vale
 ```
 
-**方式 B：使用本地已有的仓库：**
+### 2.3 切换到你要测试的版本
 ```bash
-cd /home/love2DGame_vale
+git tag              # 查看所有版本
+git checkout v0.0.0  # V0 Hello Engine（引擎脚手架）
+git checkout v1.0.0  # V1 棋盘初现（静态 32 棋子）
+git checkout v2.0.0  # V2 落子有声（可点击走棋+音效）
+git checkout v3.0.0  # V3 棋逢对手（将军/AI/悔棋）
+git checkout v4.0.0  # V4 锦上添花（主菜单）
+git checkout v5.0.0  # V5 整装待发（打包就绪，默认 main）
 ```
 
-**方式 C：使用打包文件（随本说明提供）：**
+### 2.4 运行
 ```bash
-tar -xzf trillion_games_2D_vale-v0.0.0.tar.gz
-cd trillion_games_2D_vale
-```
-
-### 2.3 切换版本（每个版本都有 tag）
-```bash
-# 查看所有版本 tag
-git tag
-
-# 切换到 V0
-git checkout v0.0.0
-
-# 回到最新的 main 分支
-git checkout main
-```
-
----
-
-## 三、执行（运行）说明
-
-### 3.1 开发模式运行
-```bash
-cd /home/love2DGame_vale   # 或你克隆的目录
 love .
 ```
-> LÖVE2D 会自动读取当前目录下的 `main.lua` 和 `conf.lua`。
-
-### 3.2 预期效果（V0）
-
-启动后你应该看到：
-
-1. **1 秒左右的启动画面**：
-   - 深色背景
-   - 白色大字 "Trillion Games 2D"
-   - 紫色小字 "Vale"
-   - 下方灰色 "Loading..."
-2. **淡入切换到演示场景**（淡入淡出效果约 0.5 秒）：
-   - 大字 "Hello Engine" 和 "Core systems operational — Crimson"
-   - 一个红色方块上下浮动，带阴影（模拟伪纵深）和光晕
-   - 左下角显示 FPS、当前 Scene、Frame 数、内存占用
-   - 左上角按键说明
-   - 右侧显示 5 个渲染层名称
-   - 左下角底部显示快捷键提示
-
-### 3.3 交互操作
-
-| 按键/操作 | 功能 |
-|-----------|------|
-| `1` / `2` / `3` | 切换方块颜色（红 / 蓝 / 绿） |
-| `Space` | 方块弹性缩放动画 |
-| 鼠标左键点击画布任意位置 | 在点击处产生彩色涟漪效果 |
-| 鼠标右键 | 切换到下一个颜色 |
-| `F11` | 切换全屏/窗口 |
-| `F12` | 截图（保存到 LÖVE 存档目录，见下文） |
-| `ESC` | 退出游戏 |
-
-### 3.4 截图位置
-
-F12 截图保存在 LÖVE2D 的存档目录：
-- Linux: `~/.local/share/love/trillion_games_vale/`
-- Windows: `C:\Users\<用户名>\AppData\Roaming\LOVE\trillion_games_vale\`
-- macOS: `~/Library/Application Support/LOVE/trillion_games_vale/`
-
-用户配置 `user_config.lua` 也保存在该目录。
-
-### 3.5 控制台输出
-
-运行时终端会显示彩色分级日志：
-```
-[INFO] [config] No user config found, using defaults
-[INFO] [engine] === Trillion Games 2D Engine Starting ===
-[INFO] [engine] LÖVE2D version: 11.3.0
-[INFO] [engine] Screen: 1280x720
-[DEBUG] [scene] Registered scene: boot
-[DEBUG] [scene] Registered scene: demo
-[INFO] [scene] Switching: (none) -> boot
-[INFO] [boot_scene] Booting...
-[INFO] [engine] === Engine initialized in 0.00s ===
-[INFO] [boot_scene] Boot complete, switching to 'demo'
-[INFO] [demo_scene] Loaded
-```
-- 青色 = DEBUG
-- 绿色 = INFO
-- 黄色 = WARN
-- 红色 = ERROR
-
-如果需要更安静的输出，修改 `src/core/config.lua` 中 defaults.debug.log_level 为 `"INFO"` 或 `"WARN"`。
-
----
-
-## 四、打包发布相关命令（V5 会自动化，V0 仅供参考）
-
-### 4.1 生成 .love 文件（所有平台通用的游戏包）
+或使用 Makefile：
 ```bash
-cd /home/love2DGame_vale
-zip -9 -r trillion_games.love . \
-    -x "*.git*" -x "tests/*" -x "docs/*" -x "*.md" -x "*.zip" -x "*.tar.gz"
-```
-生成的 `.love` 文件可用任何平台的 LÖVE2D 打开。
-
-### 4.2 直接用 LÖVE 运行 .love
-```bash
-love trillion_games.love
+make run
 ```
 
 ---
 
-## 五、项目文件结构（对照代码）
+## 三、预期启动效果（V5）
+
+1. 双击/命令启动后，先黑屏闪出 Boot 场景（约 1 秒）
+2. 进入主菜单：
+   - 深木色背景 + 金色飘浮粒子
+   - 标题"中国象棋 / Chinese Chess"
+   - 三个按钮：
+     - 红 "开始对战" → 人机对战（你执红，黑方 AI）
+     - 蓝 "双人对战" → 两人同屏对下
+     - 灰 "退出游戏" → 退出
+3. 点击"开始对战"进入棋盘：
+   - 居中木纹棋盘，带斜视角伪纵深
+   - 32 枚棋子（红/黑方，中文字）
+   - 顶部显示回合指示（红方/黑方）
+   - 底部显示操作提示
+4. 窗口左上角显示 "Trillion Games 2D - Vale" + 象棋图标
+5. 左下角 FPS 数字（debug 模式，发布可关）
+
+---
+
+## 四、操作说明
+
+### 菜单界面
+| 按键 / 鼠标 | 作用 |
+|---|---|
+| 鼠标左键 | 点击按钮 |
+| Enter / Space | 快速开始 AI 对战 |
+| ESC | 退出游戏 |
+
+### 棋盘界面
+| 按键 / 鼠标 | 作用 |
+|---|---|
+| 鼠标左键 | 选子 / 落子 / 吃子 |
+| R | 重新开局 |
+| U | 悔棋（AI 模式下连悔两步，把 AI 的一步也撤掉） |
+| A | 切换 AI 模式 / 双人模式 |
+| ESC | 返回主菜单 |
+| F11 | 全屏 / 窗口切换 |
+| F12 | 截图（存到 love 截图目录） |
+| Ctrl+Q | 退出游戏 |
+
+### 走棋视觉反馈
+- 选中棋子 → 黄色圆圈高亮 + "嗒" 一声
+- 可走空格 → 绿色小点
+- 可吃子 → 红色圆圈（该格子有对方棋子）
+- 移动 → ease-out 动画 + 落子"哒"声
+- 吃子 → 粒子爆炸（对方棋子颜色）+ "咔"脆响 + 镜头轻震
+- 非法走法 → 闷响 + 镜头抖动
+- 将军 → 红王周围红色脉冲圈 + 红色屏幕闪烁 + 警报声
+- 将死 → 金色粒子烟花 + 全屏半透明覆盖 + 胜负提示
+- 上一步 → 黄色连线 + 目标黄圈
+
+### AI 说明
+V3-V5 AI 是 1 层贪心搜索（greedy 1-ply），强度大约"刚会规则的新手"水平：
+- 子力价值：车 900 / 炮 450 / 马 400 / 士象 200 / 兵 100 / 帅 100000
+- 过河兵 +60，中线棋子 +15~25
+- 将军 +30，将死 +100000
+- 有随机扰动，不会每次都走一样的
+- 思考延时固定 0.4 秒（像在思考一样）
+- V6+ 可升级为 alpha-beta 搜索加深
+
+---
+
+## 五、打包分发
+
+所有打包命令在项目根目录执行。
+
+### 5.1 打 .love 文件（跨平台通用格式）
+```bash
+make love
+# 产出 build/trillion_games_vale-5.0.0.love (约 31MB)
+# 测试：love build/trillion_games_vale-5.0.0.love
+```
+
+### 5.2 Linux AppImage
+```bash
+# 1. 下载官方 love AppImage
+wget https://github.com/love2d/love/releases/download/11.5/love-11.5-x86_64.AppImage -O tools/pack/love.AppImage
+# 2. 合并（见 Makefile 注释）
+cat tools/pack/love.AppImage build/trillion_games_vale-5.0.0.love > dist/trillion_games_vale-5.0.0.AppImage
+chmod +x dist/trillion_games_vale-5.0.0.AppImage
+# 3. 直接运行
+./dist/trillion_games_vale-5.0.0.AppImage
+```
+
+### 5.3 Windows exe
+在 Windows 机器上（或用 Wine）：
+1. 下载 love-11.5-win64.zip 解压到 tools/pack/win64/
+2. 合并：
+```
+copy /b love.exe+trillion_games_vale-5.0.0.love trillion_games_vale.exe
+```
+3. 把 exe 和所有 DLL（SDL2.dll, OpenAL32.dll, love.dll 等）一起打包成 zip
+
+### 5.4 macOS app
+必须在 Mac 上做：
+1. 安装 love.app
+2. 复制为 TrillionGames.app
+3. 把 .love 丢进 TrillionGames.app/Contents/Resources/
+4. 用 iconutil + assets/images/icon*.png 转 .icns
+5. 修改 Info.plist
+
+### 5.5 Android APK
+最简单：访问 https://simple.love2d.org/ 上传 .love → 直接下载 APK。
+源码构建：见 PUBLISHING.md 第四节。
+
+### 5.6 Steam
+Steam 相关路径、Steamworks SDK 接入、成就/云存档钩子都已经预留，详见 PUBLISHING.md。
+
+### 5.7 重新生成图标（不建议动）
+```bash
+make icon
+# 会调用 tools/gen_icon/ 里的 LÖVE2D 小程序重画 assets/images/icon*.png
+```
+
+---
+
+## 六、项目文件结构
 
 ```
 love2DGame_vale/
-├── main.lua                     ← LÖVE2D 入口（love.load/update/draw 委托给 engine）
-├── conf.lua                     ← LÖVE2D 配置（窗口/模块开关/分辨率）
-├── README.md                    ← 项目介绍
-├── CHANGELOG.md                 ← 版本变更记录
-├── SETUP.md                     ← 本文件
-├── .gitignore                   ← Git 忽略规则
-├── docs/                        ← 项目设计文档
-│   ├── 01-vision.md             ← 愿景
-│   ├── 02-methodology.md        ← 开发方法论（迭代式）
-│   ├── 03-architecture.md       ← 整体架构
-│   ├── 04-roadmap.md            ← V0-V5 详细路线图
-│   ├── 05-coding-standards.md   ← 代码规范（含 Lua 速查）
-│   ├── 06-key-modules.md        ← 关键模块说明
-│   └── 07-publishing.md         ← 发布路径（Steam/APK/桌面）
+├── main.lua                    # LÖVE2D 入口
+├── conf.lua                    # LÖVE2D 配置（窗口/模块/版本/图标）
+├── LICENSE                     # MIT License
+├── README.md                   # 项目总览 / 架构 / 版本路线
+├── SETUP.md                    # 本文档
+├── PUBLISHING.md               # 三平台发布详细指南
+├── CHANGELOG.md                # 版本变更日志
+├── Makefile                    # 构建脚本
+├── docs/
+│   └── images/                 # 架构图等文档图片
 ├── src/
-│   ├── core/                    ← 核心基础层（V0 完成，完全通用）
-│   │   ├── engine.lua           ← 游戏循环调度器
-│   │   ├── config.lua           ← 配置加载/持久化
-│   │   ├── logger.lua           ← 分级日志
-│   │   ├── event.lua            ← 事件总线
-│   │   ├── input.lua            ← 输入抽象层
-│   │   ├── resource.lua         ← 资源管理/缓存
-│   │   ├── renderer.lua         ← 五层渲染器
-│   │   ├── scene_manager.lua    ← 场景管理
-│   │   ├── timer.lua            ← 计时器 + Tween
-│   │   └── utils.lua            ← 工具函数
-│   ├── engine/                  ← 通用游戏系统层（V2+ 逐步填充）
-│   └── game/                    ← 中国象棋业务层（V1+ 开始写）
+│   ├── core/                   # 通用引擎层（Game-agnostic）
+│   │   ├── engine.lua          #   引擎主入口
+│   │   ├── logger.lua          #   彩色日志
+│   │   ├── config.lua          #   配置读写
+│   │   ├── event.lua           #   事件总线
+│   │   ├── timer.lua           #   延时/定时/补间
+│   │   ├── input.lua           #   键鼠输入映射
+│   │   ├── scene_manager.lua   #   场景切换
+│   │   ├── resource.lua        #   字体/图像/声音缓存
+│   │   ├── renderer.lua        #   分层渲染 (8层)
+│   │   ├── save.lua            #   V4 存档系统
+│   │   ├── steam.lua           #   V5 Steamworks 钩子
+│   │   └── utils.lua           #   工具函数
+│   ├── engine/                 # 游戏引擎扩展（可复用）
+│   │   ├── camera/init.lua     #   相机/震动/缩放
+│   │   ├── audio/init.lua      #   程序化音效
+│   │   ├── particles/init.lua  #   粒子系统
+│   │   └── ui/button.lua       #   通用按钮组件
+│   └── game/                   # 中国象棋业务层
+│       ├── constants.lua       #   棋盘/颜色/棋子字符
+│       ├── entities/
+│       │   ├── board.lua       #     棋盘数据
+│       │   └── piece.lua       #     棋子数据
+│       ├── systems/
+│       │   ├── move_rules.lua  #     单步走法判定
+│       │   ├── game_rules.lua  #     将军/将死/白脸将
+│       │   └── ai.lua          #     贪心 AI
+│       ├── renderers/
+│       │   ├── board_renderer.lua #  棋盘绘制
+│       │   └── piece_renderer.lua #  棋子绘制
 │       └── scenes/
-│           ├── boot_scene.lua   ← 启动画面
-│           └── demo_scene.lua   ← V0 演示场景
-├── assets/                      ← 资源目录（V0 为空占位）
-│   ├── images/
-│   ├── fonts/
-│   ├── sounds/
-│   └── shaders/
-└── tests/                       ← 测试脚本（后续填充）
+│           ├── boot_scene.lua     # 启动闪屏
+│           ├── menu_scene.lua     # V4 主菜单
+│           ├── board_scene.lua    # 主游戏场景
+│           └── demo_scene.lua     # V0 测试场景
+├── assets/
+│   ├── fonts/                     # Noto Sans CJK SC (Regular+Bold)
+│   ├── images/                    # 图标 PNG (16~512)
+│   └── sounds/                    # （V5 无外部音效，程序化生成）
+├── tools/
+│   └── gen_icon/                  # 图标程序化生成器
+└── build/                         # make 产出目录（.gitignore）
 ```
 
 ---
 
-## 六、注意事项（Important Notes）
+## 七、注意事项（坑点总结）
 
-### 6.1 Lua 初学者陷阱（V0 已经避免的坑）
+### 7.1 Lua 语言新手常踩坑
+1. **Lua 数组下标从 1 开始**（不是 0），但棋盘坐标我们用 0 起
+2. **`local a = 1, b = 2` 是非法语法**，必须分开两行：`local a=1; local b=2`
+3. **`#table` 只对 array 有效**，hash 部分不算；遍历 hash 用 `pairs`
+4. **`..` 是字符串拼接**（不是 +），`tostring(x)` 数字转字符串
+5. **`obj:method()` 是 `obj.method(obj)` 的语法糖**，注意 `:` 和 `.` 的区别
+6. **没有 class 关键字**，用 metatable + `__index` 实现
+7. **`nil` vs `false`**：条件判断时只有 nil 和 false 为假，0 和 "" 都算真
 
-1. **table 索引从 1 开始**，不是 0。第一个元素是 `tbl[1]`。
-   V0 的所有代码都是 1-indexed，没有 C 风格的 0 索引。
-2. **只有 `false` 和 `nil` 是假值**。`0` 和 `""`（空字符串）在 if 判断中是真！
-3. **`..` 拼接字符串**，不是 `+`。`"hello" .. " " .. "world"`。
-4. **`local` 关键字务必加**。不加 local 会污染全局环境。V0 代码里所有变量都带 local。
-5. **`require` 路径用点分隔**：`require("core.engine")` 对应 `src/core/engine.lua`。
-   `src/` 前缀已在 main.lua 里加入 `package.path`，所以不用写 `src.core.engine`。
-6. **函数定义两种写法**：
-   - `M.foo = function(x) ... end` — 点号调用 `M.foo(x)`
-   - `function M:foo(x) ... end` — 冒号调用 `M:foo(x)`，自动传入 `self`
-   V0 混用了两种：模块 API 用点号，场景生命周期用冒号。
+### 7.2 LÖVE2D 引擎常见坑
+1. **图形变换栈深度默认 32 层**！循环里 push/pop 超过 32 次会直接 segfault
+   - 解决：画椭圆用 `love.graphics.ellipse(...)` 而非 `push/scale/circle/pop`
+   - 本项目所有代码都已遵守
+2. **love.filesystem 有安全沙箱**，只能读写：
+   - 游戏目录（只读）
+   - save 目录 `~/.local/share/love/trillion_games_vale/`（可写）
+3. **文件路径大小写敏感**（Linux/Mac/APK 上），Windows 上不敏感；统一小写
+4. **中文显示必须自己加载中文字体**，LÖVE2D 默认字体不含 CJK
+   - 本项目自带 Noto Sans CJK SC
+5. **`dt` 在窗口被拖大的时候可能跳变大**，engine.lua 已做 0.1s clamp
+6. **`love.math.random` 不调 `setRandomSeed` 每次会一样**，main.lua 已设
+7. **Canvas 后注意 `setCanvas()` 还原**，否则后续画到 Canvas 上而不显示
+8. **t.window.icon 必须是 PNG 路径**（本项目已生成）
+9. **鼠标事件里按钮编号**：1=左键，2=右键，3=中键
+10. **场景切换时旧场景的 event 监听要在 unload 时清理**（本项目已做）
 
-### 6.2 LÖVE2D 坑点
+### 7.3 中国象棋规则边界（本项目已处理）
+1. 相不能过河，有塞象眼
+2. 马有蹩马腿
+3. 炮走子不吃子，吃子必须翻一个
+4. 兵过河前只能向前，过河后可左右但不能后退
+5. 帅/将不能离开九宫
+6. 白脸将（将帅照面）判将军
+7. 走子后不能让自己的将/帅处于被将军状态（应将）
+8. 困毙也算输（无子可走，和国际象棋不同）
 
-1. **颜色是 0-1 范围，不是 0-255**！`utils.color(255, 0, 0)` 返回 `{1, 0, 0}`。
-   V0 已封装 `utils.color()` 转换，业务代码永远传 0-255。
-2. **love.filesystem 的读写目录是隔离的**，不能直接写项目源码目录。
-   跨平台存档/配置统一用 love.filesystem（`core/config.lua` 已封装）。
-3. **坐标系原点 (0,0) 在左上角**，Y 轴向下，不是数学坐标系。
-4. **窗口 resize 会让 Canvas 尺寸变化**，要在 love.resize 里处理（V0 engine 已处理）。
-5. **dt (delta time) 在窗口拖动/卡顿后会很大**，V0 engine.update 里已 clamp 到 0.1 秒，防止跳帧。
-6. **资源路径大小写敏感！** Linux/Android 严格区分 `Board.png` 和 `board.png`，Windows 不区分。
-   后续加资源时全部用小写文件名，避免跨平台 bug。
+### 7.4 性能建议
+- 当前代码 60fps 无压力（32 棋子 + 粒子 + 渲染 8 层）
+- 如果后续加更多特效（弹珠游戏），注意每帧 draw call < 500
+- 粒子系统在 particles/init.lua 自己管理生命周期，不需要手动 GC
+- 字体和图片已通过 resource.lua 缓存，不会重复加载
 
-### 6.3 Git / 版本管理注意
+### 7.5 Git 规范
+- 每个版本一个 tag：v0.0.0 → v5.0.0
+- 每个版本 commit message 格式：`[vN] 版本名 - 简要说明`
+- commit 前确认 love . 能正常运行
+- 不要把 build/ dist/ ~/.local 里的东西提交
 
-1. **永远不要 commit 构建产物**（.love、.zip、.exe、.apk）。已在 .gitignore 配置。
-2. **每个版本一个 annotated tag**：`git tag -a vN.0.0 -m "VN: 描述"`。
-3. **不要直接 push 大二进制资源**到 git（V5 如有大 BGM/高清图用 Git LFS）。
-4. **切换 tag 后会进入 detached HEAD**，这是正常的，做完实验后 `git checkout main` 回来。
+### 7.6 调试技巧
+```bash
+# 打开 LÖVE2D 控制台（Windows 有用）
+# conf.lua 设 t.console = true
 
-### 6.4 后续开发注意
+# 查看日志级别
+# 启动时 export 环境变量
+LOVE_DEBUG=1 love .
 
-1. **V0 是通用脚手架**，`src/core/` 的代码在 V1-V5 不要为象棋需求做侵入性修改。
-   如果需要新增能力，优先放在 `src/engine/` 层。
-2. **场景必须实现 `:load()`, `:update(dt)`, `:draw(r)`, `:unload()` 四个方法**。
-   在 `:unload()` 里**务必**取消事件订阅和 tween（参考 demo_scene.lua 的 unload 写法），否则切场景后旧场景还在响应事件。
-3. **绘制不要直接调用 love.graphics**，统一用 `r.rect(...)`, `r.text(...)` 等 renderer API 提交到层，保证分层顺序正确。需要直接画的用 `r.custom(layer, fn)`。
-4. **配置项先加默认值**到 `src/core/config.lua` 的 defaults 表，再用 `config.get()` 读取。
-5. **模块间不要直接 require 对方**，能用 event bus 就用 event bus。比如输入不调用场景，而是发 `input:mousepressed` 事件。
+# 截图会自动存到 ~/.local/share/love/trillion_games_vale/screenshots/
+ls ~/.local/share/love/trillion_games_vale/
 
-### 6.5 性能注意（提前提醒）
-
-1. **不要在 update/draw 里创建 table**（比如每帧 `{x=..., y=...}`），GC 压力大。
-   V0 里 demo_scene 涟漪创建是可以接受的小量，象棋正式版要避免每帧 new 对象。
-2. **资源加载只做一次**（resource.lua 已做缓存，放心调用 getImage/getFont）。
-3. **Tween 不要每帧创建**，在事件触发时创建。
-4. **V3 AI 搜索时必须用 coroutine**，不能阻塞主循环超过 1 帧（16ms）。
-
-### 6.6 调试技巧
-
-1. **看 FPS/内存**：默认左上角 debug overlay 已显示，不需要时改 config `debug.show_fps = false`。
-2. **打印 table**：`logger.dump("name", tbl)` 会递归打印内容。
-3. **日志过滤**：`logger.setModule("scene")` 只显示 scene 模块的日志。
-4. **单步调试 Lua**：推荐用 ZeroBrane Studio（支持 LÖVE2D 调试），V0 之后如果需要我再教你配置。
-5. **热重载**：LÖVE2D 没有内置 hot reload，推荐装 [lovebird](https://github.com/rxi/lovebird) 或 [lurker](https://github.com/rxi/lurker) 实现改代码自动重启（V1 之后如果需要我加上）。
-
----
-
-## 七、下一步（V1 预告）
-
-V0 验收通过后，V1 "棋盘初现" 会：
-- 加载中文字体
-- 渲染 9×10 象棋棋盘（网格/楚河汉界/九宫斜线）
-- 放置 32 枚棋子到初始位置
-- 棋盘 15° 斜视角偏移 + 厚度 + 棋子椭圆阴影（伪纵深）
-- Camera 居中适配窗口
-
-想进入 V1 时告诉我即可。
+# 重置用户配置
+rm ~/.local/share/love/trillion_games_vale/user_config.lua
+```
 
 ---
 
-## 八、故障排查
+## 八、常见问题排查
 
-| 现象 | 原因 | 解决 |
-|------|------|------|
-| `bash: love: command not found` | LÖVE2D 没装或不在 PATH | 见 2.1 节安装 |
-| `Error: module 'core.xxx' not found` | 不在项目根目录运行 / package.path 错了 | `cd` 到项目根目录再 `love .` |
-| 窗口乱码 / 中文显示为方块 | V0 默认字体不含中文 | **预期行为**，V1 才加载中文字体 |
-| 全屏后黑屏 | Linux 某些窗口管理器兼容问题 | 按 F11 切回，或改 conf.lua window.fullscreen = false |
-| 帧率低 / 卡顿 | 开了其他 GPU 重负载程序 | 象棋类游戏应该永远 60fps，如果低于 60 报 bug |
-| 配置修改不生效 | 旧的 user_config.lua 覆盖了默认值 | 删除存档目录下的 user_config.lua 重启 |
+| 问题 | 可能原因 | 解决方法 |
+|---|---|---|
+| `bash: love: command not found` | LÖVE2D 没装或不在 PATH | 见第 2.1 节安装 |
+| 窗口里中文变方块 | 字体没加载或字体文件缺 | 检查 assets/fonts 下 .ttc 文件存在 |
+| 启动直接 crash/segfault | push/pop 栈溢出或 shader 问题 | 看 CHANGELOG 里 Fixed 部分是否已修 |
+| 鼠标点选无反应 | 场景未切换 / 被动画锁 | 看日志有无 `[board_scene] V3 ready` |
+| AI 不走棋 | 你在用双人模式或已将死 | 按 A 切换 AI 模式；按 R 重开 |
+| 棋子走不过去（明明是合法格） | 走了之后你被将军（应将规则） | 换一步应将的走法 |
+| `make love` zip 报错 | 某些文件不存在（README/LICENSE）| 不要删这几个文件；或改 Makefile |
+| 图标没显示 | assets/images/icon.png 缺失 | `make icon` 重新生成 |
+| 音效很小/听不见 | 系统音量/被 mute | core.audio 默认 0.9 sfx_volume |
+
+---
+
+## 九、从 v0.0.0 到 v5.0.0 的切换顺序（你要回归测试用）
+
+```bash
+git checkout v0.0.0 && love .     # 看到 Boot→Demo 场景、三原色方块、F11 全屏即可
+git checkout v1.0.0 && love .     # 看到棋盘+32棋子即可
+git checkout v2.0.0 && love .     # 可以点选棋子、看绿点红点、走子有声音
+git checkout v3.0.0 && love .     # 试下把对面将死，看到金色彩带；按 U 悔棋；按 A 切双人
+git checkout v4.0.0 && love .     # 先看到主菜单，点击才进游戏
+git checkout v5.0.0 && love .     # 同上，且窗口有图标，make love 可打包
+git checkout main                # 回到最新
+```
+
+每个版本退出后切下一个 tag，都可以独立运行。
+
+---
+
+## 十、下一步（V6 及以后建议）
+
+- AI 升级：alpha-beta 剪枝 + 4 层深度 + 开局库
+- 手柄 / Steam Deck 支持（joystick 模块已预留）
+- 对局计时（中国象棋比赛规则）
+- 棋谱导出（PGN 格式）
+- 在线对战（WebSocket 或 Steam P2P）
+- 皮肤系统（可切换棋盘/棋子外观）
+- 多语言（i18n）
+- 复用引擎做弹珠游戏！只需在 src/game/ 里加另一个项目即可，engine/core 完全不动
+
+---
+
+项目已全部就绪。祝开发愉快 🎮
