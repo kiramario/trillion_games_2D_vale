@@ -10,6 +10,12 @@ local M = {}
 function M.draw(piece, font)
     local sx, sy = BoardRen.fileRankToWorld(piece.file, piece.rank)
     if not sx then return end
+    M.drawAt(piece, font, sx, sy)
+end
+
+--! 在指定世界坐标 (x,y) 绘制棋子（动画/拖动用）
+function M.drawAt(piece, font, sx, sy)
+    if not sx then return end
 
     local lg = love.graphics
     local radius = C.PIECE_RADIUS
